@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Applications",
+    "\\Applications\\Services",
+    "\\Contexts",
+    "\\Controllers",
+    "\\Domains",
+    "\\DTOs",
+    "\\Interfaces",
+    "\\Properties",
+    "\\Repositories"
+  ],
+  "PreviewInSolutionExplorer": false
+}

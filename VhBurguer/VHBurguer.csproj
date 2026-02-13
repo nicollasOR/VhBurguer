@@ -7,6 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\NovaPasta1\**" />
+    <Compile Remove="DTOs\NovaPasta2\**" />
+    <Compile Remove="DTOs\ProdutoDto\NovaPasta\**" />
+    <Compile Remove="DTOs\NovaPasta\**" />
+    <Content Remove="DTOs\NovaPasta1\**" />
+    <Content Remove="DTOs\NovaPasta2\**" />
+    <Content Remove="DTOs\ProdutoDto\NovaPasta\**" />
+    <Content Remove="DTOs\NovaPasta\**" />
+    <EmbeddedResource Remove="DTOs\NovaPasta1\**" />
+    <EmbeddedResource Remove="DTOs\NovaPasta2\**" />
+    <EmbeddedResource Remove="DTOs\ProdutoDto\NovaPasta\**" />
+    <EmbeddedResource Remove="DTOs\NovaPasta\**" />
+    <None Remove="DTOs\NovaPasta1\**" />
+    <None Remove="DTOs\NovaPasta2\**" />
+    <None Remove="DTOs\ProdutoDto\NovaPasta\**" />
+    <None Remove="DTOs\NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23">
       <PrivateAssets>all</PrivateAssets>

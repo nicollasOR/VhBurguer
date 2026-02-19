@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using VHBurguer.Applications.Services;
 using VHBurguer.DTOs.ProdutoDto;
-
+using VHBurguer.Exceptions;
+using VHBurguer.Applications.Services;
 namespace VHBurguer.Controllers
 {
     [Route("api/[controller]")]
@@ -16,6 +18,25 @@ namespace VHBurguer.Controllers
         {
             _service = service;
         }
+
+        private int ObterUsuarioIdLogado()
+        {
+
+            //busca no token/claims o valor armazenado como id do usuario
+            string? idTexto = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //ClaimTypes.NameIdentifier geralmente guarda o ID do usuário no JWT
+
+            if (string.IsNullOrEmpty(idTexto))
+            {
+                throw new DomainException("Usuário não encotnrado");
+            }
+
+            // string - > int
+            // nosso usuarioId no sistema está como int
+            return int.Parse(idTexto);
+            //as claims que são os usuários dentro do token sempre serão armazenadas como texto
+        }
+
 
         // autenticação do usuário
 
@@ -41,6 +62,31 @@ namespace VHBurguer.Controllers
 
             return Ok(produto);
         }
+
+        [HttpGet("{id}/imagem")]
+        public ActionResult ObterImagem(int id)
+        {
+
+            try
+            {
+                var imagem = _service.ObterImagem(id);
+                // retorna o arquivo para o navegador
+                //"imagem/jpeg" informa o tipo da imagem (MIME type)
+                //O navegador entende que deve renderizar como Imagem
+                
+                
+                return File(imagem, "image/jpeg");
+            }
+
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+            return Ok();
+        }
+
+
+
 
     }
 }

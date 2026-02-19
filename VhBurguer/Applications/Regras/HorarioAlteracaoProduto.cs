@@ -18,5 +18,7 @@ namespace VHBurguer.Applications.Regras
                 throw new DomainException("Produto só pode ser alterado fora do horário de funcionamento");
             }    
         }
+
+ 
     }
 }

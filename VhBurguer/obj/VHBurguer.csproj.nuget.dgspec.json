@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\54930515831\\Desktop\\VH_Burguer\\VHBurguer\\VHBurguer.csproj": {}
+    "C:\\Users\\54930515831\\Desktop\\VhBurguer\\VhBurguer\\VHBurguer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\54930515831\\Desktop\\VH_Burguer\\VHBurguer\\VHBurguer.csproj": {
+    "C:\\Users\\54930515831\\Desktop\\VhBurguer\\VhBurguer\\VHBurguer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\54930515831\\Desktop\\VH_Burguer\\VHBurguer\\VHBurguer.csproj",
+        "projectUniqueName": "C:\\Users\\54930515831\\Desktop\\VhBurguer\\VhBurguer\\VHBurguer.csproj",
         "projectName": "VHBurguer",
-        "projectPath": "C:\\Users\\54930515831\\Desktop\\VH_Burguer\\VHBurguer\\VHBurguer.csproj",
+        "projectPath": "C:\\Users\\54930515831\\Desktop\\VhBurguer\\VhBurguer\\VHBurguer.csproj",
         "packagesPath": "C:\\Users\\54930515831\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\54930515831\\Desktop\\VH_Burguer\\VHBurguer\\obj\\",
+        "outputPath": "C:\\Users\\54930515831\\Desktop\\VhBurguer\\VhBurguer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -49,6 +49,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.24, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.23, )"

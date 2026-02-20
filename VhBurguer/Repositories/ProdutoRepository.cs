@@ -9,7 +9,7 @@ namespace VHBurguer.Repositories
     {
         private readonly Vh_BurguerProfContext _context;
 
-        ProdutoRepository(Vh_BurguerProfContext context)
+        public ProdutoRepository(Vh_BurguerProfContext context)
         {
             _context = context;
         }

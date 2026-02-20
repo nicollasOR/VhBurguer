@@ -5,6 +5,7 @@ using VHBurguer.Applications.Services;
 using VHBurguer.DTOs.ProdutoDto;
 using VHBurguer.Exceptions;
 using VHBurguer.Applications.Services;
+using Microsoft.AspNetCore.Authorization;
 namespace VHBurguer.Controllers
 {
     [Route("api/[controller]")]
@@ -82,9 +83,72 @@ namespace VHBurguer.Controllers
             {
                 return NotFound(ex.Message);
             }
-        } 
+        }
 
 
+
+        [HttpPost]
+        //Indica que recebe dados no formato "multipart/form-data"
+        // é necessário quando enviamos arquivos (ex. Img do produto)
+        [Consumes("multipart/form-data")]
+        [Authorize] // usado para que exija uma autenticacao para realizar tal metodo
+        public ActionResult Adicionar([FromForm] CriarProdutoDto produtoDto) // [ FromForm ] diz que os dados vem do formulário da requisição
+        {
+            try
+            {
+                int usuarioId = ObterUsuarioIdLogado();
+                _service.Adicionar(produtoDto, usuarioId); // cadastro fica associado ao usuario logado
+                return NoContent();
+            }
+
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut("{id}")]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+
+        public ActionResult Atualizar(int id, [FromForm] AtualizarProdutoDto produtoDto)
+        {
+            
+            try
+            {
+                _service.Atualizar(id, produtoDto);
+                return NoContent();
+            }
+
+            catch(DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+        [HttpDelete("{id}")]
+        [Authorize]
+
+        public ActionResult Delete(int id)
+        {
+
+            try
+            {
+                _service.Remover(id);
+                return StatusCode(204, id);
+            }
+
+            catch(DomainException ex)
+            {
+                return StatusCode(400, id);
+            }
+
+            
+
+        }
 
 
     }

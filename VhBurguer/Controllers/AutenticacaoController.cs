@@ -34,7 +34,6 @@ namespace VHBurguer.Controllers
                 return BadRequest(ex.Message);
 
             }
-            return Login();
         }
 
     }

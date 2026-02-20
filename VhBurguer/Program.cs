@@ -1,27 +1,36 @@
-using Microsoft.Data;
-using Microsoft.EntityFrameworkCore;
-using VHBurguer.Applications.Services;
-using VHBurguer.Contexts;
-using VHBurguer.Repositories;
-using VHBurguer.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using Microsoft.EntityFrameworkCore;
+using VHBurguer.Applications.Services;
+using VHBurguer.Contexts;
+using VHBurguer.Interfaces;
+using VHBurguer.Repositories;
+using VHBurguer.Applications.Autenticacao;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// adicionando o banco na program
+// chamar nossa conexão com o banco aqui na program
 builder.Services.AddDbContext<Vh_BurguerProfContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();//IUsuarioRepository
+
+// Usuário
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
+
+// Usuário
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<ProdutoService>();
+
+//JWT
+builder.Services.AddScoped<GeradorTokenJWT>();
+builder.Services.AddScoped<AutenticacaoService>();
 
 // Configura o sistema de autenticação da aplicação.
 // Aqui estamos dizendo que o tipo de autenticação padrão será JWT Bearer.
@@ -77,8 +86,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

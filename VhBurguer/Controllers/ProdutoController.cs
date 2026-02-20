@@ -82,8 +82,7 @@ namespace VHBurguer.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return Ok();
-        }
+        } 
 
 
 

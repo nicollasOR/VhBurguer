@@ -21,7 +21,7 @@ namespace VHBurguer.Repositories
 
         public Categoria ObterPorId(int id)
         {
-            Categoria categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
+            Categoria? categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
 
             return categoria;
         }
@@ -33,9 +33,10 @@ namespace VHBurguer.Repositories
             //se foi informado um ID atual 
             // significa que estamos editando uma categoria existente
             // então vamos ignorar própria categoria na verificação
-            if(categoriaIdAtual.HasValue)
-            consulta = consulta.Where(categoria => categoria.CategoriaID != categoriaIdAtual.Value);
-
+            if (categoriaIdAtual.HasValue)
+            {
+                consulta = consulta.Where(categoria => categoria.CategoriaID != categoriaIdAtual.Value);
+            }
             return consulta.Any(categoria => categoria.Nome == nome);
         }
 
@@ -47,9 +48,11 @@ namespace VHBurguer.Repositories
 
         public void Atualizar(Categoria categoria)
         {
-            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == categoria.CategoriaID);
+            Categoria? categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == categoria.CategoriaID);
             if (categoriaBanco == null)
-                return;
+            { 
+                return; 
+            }
 
             categoriaBanco.Nome = categoria.Nome;
             _context.SaveChanges();
@@ -57,9 +60,11 @@ namespace VHBurguer.Repositories
 
         public void Remover(int id)
         {
-            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == id);
+            Categoria? categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == id);
             if (categoriaBanco == null)
+            {
                 return;
+            }
 
             _context.Categoria.Remove(categoriaBanco);
             _context.SaveChanges();

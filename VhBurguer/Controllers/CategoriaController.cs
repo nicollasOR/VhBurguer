@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VHBurguer.Applications.Services;
 using VHBurguer.DTOs.CategoriaDto;
+using VHBurguer.Exceptions;
 using VHBurguer.Interfaces;
 
 namespace VHBurguer.Controllers
@@ -13,7 +14,7 @@ namespace VHBurguer.Controllers
     {
 
         private readonly CategoriaService _service;
-        CategoriaController(CategoriaService service)
+        public CategoriaController(CategoriaService service)
         {
             _service = service;
         }
@@ -46,7 +47,7 @@ namespace VHBurguer.Controllers
 
             }
 
-            catch (Exception ex)
+            catch (DomainException ex)
             {
                 return BadRequest(ex);
             }
@@ -61,10 +62,10 @@ namespace VHBurguer.Controllers
             try
             {
                 _service.Atualizar(id, criarDto);
-                return NoContent();
+                return StatusCode(201);
             }
 
-            catch (Exception ex)
+            catch (DomainException ex)
             {
                 return StatusCode(400, ex);
             }
@@ -82,7 +83,7 @@ namespace VHBurguer.Controllers
                 return NoContent();
             }
 
-            catch(Exception ex)
+            catch(DomainException ex)
             {
                 return BadRequest(ex);
             }

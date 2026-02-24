@@ -25,6 +25,7 @@ namespace VHBurguer.Applications.Services
                 Nome = categoria.Nome
             }).ToList();
 
+            return categoriaDto;
         }
 
         /*
@@ -69,7 +70,11 @@ namespace VHBurguer.Applications.Services
             validarNome(criarDto.Nome);
 
             if (_repository.NomeExiste(criarDto.Nome))
-                throw new DomainException("Categoria já existente");
+                {
+                throw new DomainException("Categoria já existente"); 
+            }
+
+
         Categoria categoria = new Categoria
         {
             Nome = criarDto.Nome

@@ -40,6 +40,10 @@ builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<IPromocaoRepository, PromocaoRepository>();
 builder.Services.AddScoped<PromocaoService>();
 
+//Log alteracao
+builder.Services.AddScoped<ILogAlteracaoProdutoRepository, LogAlteracaoRepository>();
+builder.Services.AddScoped<Log_AlteracaoProdutoService>();
+
 
 // Configura o sistema de autenticação da aplicação.
 // Aqui estamos dizendo que o tipo de autenticação padrão será JWT Bearer.

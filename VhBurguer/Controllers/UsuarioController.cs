@@ -110,7 +110,7 @@ namespace VHBurguer.Controllers
                 return Ok(id);
             }
 
-            catch
+            catch()
             {
                 return BadRequest(id);
             }

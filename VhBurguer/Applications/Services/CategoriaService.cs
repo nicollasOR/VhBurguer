@@ -28,23 +28,7 @@ namespace VHBurguer.Applications.Services
             return categoriaDto;
         }
 
-        /*
-         
-        public List<LerCategoriaDto> Listar()
-{
-    List<Categoria> categorias = _repository.Listar();
-    // Converte cada categoria para LerCategoriaDto
-    List<LerCategoriaDto> categoriaDto = categorias.Select(categoria => new LerCategoriaDto
-    {
-        CategoriaId = categoria.CategoriaID,
-        Nome = categoria.Nome,
-    }).ToList();
 
-    // Retorna a lista já convertida em DTO
-    return categoriaDto;
-}
-         
-         */
 
         public LerCategoriaDto ObterPorId(int id)
         {
@@ -94,6 +78,7 @@ namespace VHBurguer.Applications.Services
 
             if (_repository.NomeExiste(criarDto.Nome, categoriaIdAtual: id))
                 throw new DomainException("Já existe outra categoria com esse nome.");
+
             categoriaBanco.Nome = criarDto.Nome;
             _repository.Atualizar(categoriaBanco);
                 

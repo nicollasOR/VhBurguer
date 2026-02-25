@@ -6,7 +6,6 @@ namespace VHBurguer.Repositories
 {
     public class CategoriaRepository : ICategoriaRepository
     {
-
         private readonly Vh_BurguerProfContext _context;
 
         public CategoriaRepository(Vh_BurguerProfContext context)
@@ -21,23 +20,30 @@ namespace VHBurguer.Repositories
 
         public Categoria ObterPorId(int id)
         {
-            Categoria? categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
+            Categoria categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
 
             return categoria;
         }
 
         public bool NomeExiste(string nome, int? categoriaIdAtual = null)
         {
-            var consulta = _context.Categoria.AsQueryable(); // Cria uma consulta inicial na tabela Categoria
+            // AsQueryable() -> cria a consulta inicial na tabela Categoria, mas ainda não executa nada no banco.
+            var consulta = _context.Categoria.AsQueryable();
 
-            //se foi informado um ID atual 
-            // significa que estamos editando uma categoria existente
-            // então vamos ignorar própria categoria na verificação
+            // se foi informado um ID atual,
+            // significa que estamos EDITANDO uma categoria existente
+            // então vamos ignorar essa própria categoria na verificação
             if (categoriaIdAtual.HasValue)
             {
+                // remove da busca a categoria com esse mesmo ID
+                // evita que o sistema considere o próprio registro como duplicado
+                // exemplo -> SELECT * FROM Categoria WHERE CategoriaID != 5
                 consulta = consulta.Where(categoria => categoria.CategoriaID != categoriaIdAtual.Value);
             }
-            return consulta.Any(categoria => categoria.Nome == nome);
+
+            // verifica se existe alguma categoria com o mesmo nome
+            // retorna true se encontrar ou false se não existir
+            return consulta.Any(c => c.Nome == nome);
         }
 
         public void Adicionar(Categoria categoria)
@@ -48,19 +54,22 @@ namespace VHBurguer.Repositories
 
         public void Atualizar(Categoria categoria)
         {
-            Categoria? categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == categoria.CategoriaID);
+            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaID == categoria.CategoriaID);
+
             if (categoriaBanco == null)
-            { 
-                return; 
+            {
+                return;
             }
 
             categoriaBanco.Nome = categoria.Nome;
+
             _context.SaveChanges();
         }
 
         public void Remover(int id)
         {
-            Categoria? categoriaBanco = _context.Categoria.FirstOrDefault(categoria => categoria.CategoriaID == id);
+            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
+
             if (categoriaBanco == null)
             {
                 return;
@@ -68,9 +77,7 @@ namespace VHBurguer.Repositories
 
             _context.Categoria.Remove(categoriaBanco);
             _context.SaveChanges();
-                    
-        }   
-
+        }
 
     }
 }

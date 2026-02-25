@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using VHBurguer.Applications.Services;
 using VHBurguer.DTOs.CategoriaDto;
 using VHBurguer.Exceptions;
-using VHBurguer.Interfaces;
 
 namespace VHBurguer.Controllers
 {
@@ -12,8 +11,8 @@ namespace VHBurguer.Controllers
     [ApiController]
     public class CategoriaController : ControllerBase
     {
-
         private readonly CategoriaService _service;
+
         public CategoriaController(CategoriaService service)
         {
             _service = service;
@@ -27,11 +26,14 @@ namespace VHBurguer.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult <LerCategoriaDto> ObterPorId(int id)
+        public ActionResult<LerCategoriaDto> ObterPorId(int id)
         {
             LerCategoriaDto categoria = _service.ObterPorId(id);
+
             if (categoria == null)
+            {
                 return NotFound();
+            }
 
             return Ok(categoria);
         }
@@ -43,34 +45,27 @@ namespace VHBurguer.Controllers
             try
             {
                 _service.Adicionar(criarDto);
-                return Created();
-
+                return StatusCode(201);
             }
-
             catch (DomainException ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}")]
         [Authorize]
-
         public ActionResult Atualizar(int id, CriarCategoriaDto criarDto)
         {
-            
             try
             {
                 _service.Atualizar(id, criarDto);
-                return StatusCode(201);
+                return NoContent();
             }
-
             catch (DomainException ex)
             {
-                return StatusCode(400, ex);
+                return BadRequest(ex.Message);
             }
-
-
         }
 
         [HttpDelete("{id}")]
@@ -82,13 +77,10 @@ namespace VHBurguer.Controllers
                 _service.Remover(id);
                 return NoContent();
             }
-
-            catch(DomainException ex)
+            catch (DomainException ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
-
         }
-
     }
 }

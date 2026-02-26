@@ -78,11 +78,13 @@ namespace VHBurguer.Applications.Services
 
         public LerUsuarioDto ObterPorEmail(string email)
         {
-            Usuario? usuario = _repository.ObterPorEmail(email);
+                Usuario? usuario = _repository.ObterPorEmail(email);
+
 
             if (usuario == null)
             {
-                throw new DomainException("Usuário não existe.");
+                Console.WriteLine("Fudeu");
+                throw new DomainException("Usuario nao encontrado");
             }
 
             return LerDto(usuario); // se existe usuário, converte para DTO e devolve o usuário.

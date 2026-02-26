@@ -35,12 +35,16 @@ namespace VHBurguer.Controllers
         public ActionResult<LerUsuarioDto> ObterPorId(int id)
         {
 
-            LerUsuarioDto usuarioDto = _usuarioService.ObterPorId(id);
-            if (usuarioDto == null)
-                return NotFound(usuarioDto);
-            else
+            try
+            {
+                LerUsuarioDto usuarioDto = _usuarioService.ObterPorId(id);
                 return Ok(usuarioDto);
+            }
 
+            catch(DomainException ex)
+            {
+                return NotFound(ex.Message);
+            }
 
 
         }
@@ -49,37 +53,33 @@ namespace VHBurguer.Controllers
 
         public ActionResult<LerUsuarioDto> ObterPorEmaiL(string email)
         {
-            LerUsuarioDto usuarioDto = _usuarioService.ObterPorEmail(email);
-            if (usuarioDto != null)
+            try
+            {
+                LerUsuarioDto usuarioDto = _usuarioService.ObterPorEmail(email);
                 return Ok(usuarioDto);
-            else
-                return NotFound(usuarioDto);
+            }
+
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost]
         public ActionResult<LerUsuarioDto> Adicionar(CriarUsuarioDto usuarioDto)
         {
-
             try
             {
                 LerUsuarioDto usuarioCriado = _usuarioService.Adicionar(usuarioDto);
+
                 return StatusCode(201, usuarioCriado);
             }
-
-            catch (DomainException exception)
+            catch (DomainException ex)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(ex.Message);
             }
 
-
-            /*
-            if(usuarioDto != null)
-            return Ok(usuarioDto);
-
-            else
-            return BadRequest(usuarioDto);
-            
-             */
         }
 
         [HttpPut("{id}")]

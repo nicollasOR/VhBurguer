@@ -35,6 +35,13 @@ namespace VHBurguer.Applications.Services
             return lerUsuario;
         }
 
+        public void conferirStatusUsuario(int id)
+        {
+            Usuario? usuario = _repository.ObterPorId(id);
+            if(usuario.UsuarioID == 0 || usuario.UsuarioID == null)
+                throw new DomainException("Usuário não pode alterar nada");
+        }
+
         public List<LerUsuarioDto> Listar()
         {
             List<Usuario> usuarios = _repository.Listar();
@@ -90,16 +97,26 @@ namespace VHBurguer.Applications.Services
             return LerDto(usuario); // se existe usuário, converte para DTO e devolve o usuário.
         }
 
+        private static void validarNome(string nome)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                throw new DomainException("Nome inválido.");
+            }
+        }
+
         public LerUsuarioDto Adicionar(CriarUsuarioDto usuarioDto)
         {
             ValidarEmail(usuarioDto.Email); //]
+            validarNome(usuarioDto.Nome);
+
 
             if(_repository.EmailExiste(usuarioDto.Email))
             {
                 throw new DomainException("Já existe um usuario com este email");
             }
 
-            Usuario usuario = new Usuario // Criando entidade usuario
+            Usuario usuario = new Usuario // Criando entidade usuario   
             {
                 Nome = usuarioDto.Nome,
                 Email = usuarioDto.Email,
@@ -152,8 +169,12 @@ namespace VHBurguer.Applications.Services
 
             _repository.Remover(id);
 
+            
 
             }
+
+            //public void usuarioSemRemover(int id)
+            
 
         }
 

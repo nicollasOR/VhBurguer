@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient.DataClassification;
 using VHBurguer.Applications.Services;
 using VHBurguer.DTOs.UsuarioDto;
 using VHBurguer.Exceptions;
@@ -72,7 +73,10 @@ namespace VHBurguer.Controllers
             try
             {
                 LerUsuarioDto usuarioCriado = _usuarioService.Adicionar(usuarioDto);
-
+                if(usuarioCriado.UsuarioID == 0)
+                {
+                    return BadRequest("Usuario não pode adicionar nada");
+                }
                 return StatusCode(201, usuarioCriado);
             }
             catch (DomainException ex)
@@ -114,7 +118,12 @@ namespace VHBurguer.Controllers
             {
                 return BadRequest(id);
             }
-            }
+        }
+
+        //public IActionResult conferirUsuario(int id)
+        //{
+           
+        //}
         
 
 

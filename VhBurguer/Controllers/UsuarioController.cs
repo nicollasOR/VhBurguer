@@ -73,10 +73,7 @@ namespace VHBurguer.Controllers
             try
             {
                 LerUsuarioDto usuarioCriado = _usuarioService.Adicionar(usuarioDto);
-                if(usuarioCriado.UsuarioID == 0)
-                {
-                    return BadRequest("Usuario não pode adicionar nada");
-                }
+
                 return StatusCode(201, usuarioCriado);
             }
             catch (DomainException ex)

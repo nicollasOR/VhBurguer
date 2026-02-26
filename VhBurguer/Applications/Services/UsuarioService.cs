@@ -38,9 +38,11 @@ namespace VHBurguer.Applications.Services
         public void conferirStatusUsuario(int id)
         {
             Usuario? usuario = _repository.ObterPorId(id);
-            if(usuario.UsuarioID == 0 || usuario.UsuarioID == null)
-                throw new DomainException("Usuário não pode alterar nada");
-        }
+            if (usuario.UsuarioID == 0 || usuario.UsuarioID == null)
+                return;
+        } 
+        
+        //conferindo login usuario
 
         public List<LerUsuarioDto> Listar()
         {

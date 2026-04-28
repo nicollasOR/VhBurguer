@@ -23,7 +23,7 @@ namespace VHBurguer.Applications.Services
 
             List<LerPromocaoDto> promocoesDto = promocoes.Select(promocao => new LerPromocaoDto
             {
-                PromocaoId = promocao.PromocaoID,
+                PromocaoId = promocao.PromocaoId,
                 Nome = promocao.Nome,
                 DataExpiracao = promocao.DataExpiracao,
                 StatusPromocao = promocao.StatusPromocao
@@ -43,7 +43,7 @@ namespace VHBurguer.Applications.Services
 
             LerPromocaoDto promocaoDto = new LerPromocaoDto
             {
-                PromocaoId = promocao.PromocaoID,
+                PromocaoId = promocao.PromocaoId,
                 Nome = promocao.Nome,
                 DataExpiracao = promocao.DataExpiracao,
                 StatusPromocao = promocao.StatusPromocao

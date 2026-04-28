@@ -7,7 +7,7 @@
 
         public DateTime DataExpiracao { get; set; }
 
-        public bool StatusPromocao { get; set; }
+        public bool? StatusPromocao { get; set; }
 
 
     }

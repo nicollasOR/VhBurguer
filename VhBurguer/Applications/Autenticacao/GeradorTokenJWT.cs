@@ -57,7 +57,7 @@ namespace VHBurguer.Applications.Autenticacao
             var claims = new List<Claim>
             {
                 // passar o id do usuario ne
-            new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioID.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioId.ToString()),
             new Claim(ClaimTypes.Name, usuario.Nome.ToString()),
             new Claim(ClaimTypes.Email, usuario.Email.ToString())
             };

@@ -6,9 +6,9 @@ namespace VHBurguer.Repositories
 {
     public class CategoriaRepository : ICategoriaRepository
     {
-        private readonly Vh_BurguerProfContext _context;
+        private readonly VH_BurguerContext _context;
 
-        public CategoriaRepository(Vh_BurguerProfContext context)
+        public CategoriaRepository(VH_BurguerContext context)
         {
             _context = context;
         }
@@ -20,7 +20,7 @@ namespace VHBurguer.Repositories
 
         public Categoria ObterPorId(int id)
         {
-            Categoria categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
+            Categoria categoria = _context.Categoria.FirstOrDefault(c => c.CategoriaId == id);
 
             return categoria;
         }
@@ -38,7 +38,7 @@ namespace VHBurguer.Repositories
                 // remove da busca a categoria com esse mesmo ID
                 // evita que o sistema considere o próprio registro como duplicado
                 // exemplo -> SELECT * FROM Categoria WHERE CategoriaID != 5
-                consulta = consulta.Where(categoria => categoria.CategoriaID != categoriaIdAtual.Value);
+                consulta = consulta.Where(categoria => categoria.CategoriaId != categoriaIdAtual.Value);
             }
 
             // verifica se existe alguma categoria com o mesmo nome
@@ -54,7 +54,7 @@ namespace VHBurguer.Repositories
 
         public void Atualizar(Categoria categoria)
         {
-            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaID == categoria.CategoriaID);
+            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaId == categoria.CategoriaId);
 
             if (categoriaBanco == null)
             {
@@ -68,7 +68,7 @@ namespace VHBurguer.Repositories
 
         public void Remover(int id)
         {
-            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaID == id);
+            Categoria categoriaBanco = _context.Categoria.FirstOrDefault(c => c.CategoriaId == id);
 
             if (categoriaBanco == null)
             {

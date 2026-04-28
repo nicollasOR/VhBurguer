@@ -5,13 +5,13 @@ namespace VHBurguer.Domains;
 
 public partial class Promocao
 {
-    public int PromocaoID { get; set; }
+    public int PromocaoId { get; set; }
 
     public string Nome { get; set; } = null!;
 
     public DateTime DataExpiracao { get; set; }
 
-    public bool StatusPromocao { get; set; }
+    public bool? StatusPromocao { get; set; }
 
-    public virtual ICollection<ProdutoPromocao> ProdutoPromocao { get; set; } = new List<ProdutoPromocao>();
+    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

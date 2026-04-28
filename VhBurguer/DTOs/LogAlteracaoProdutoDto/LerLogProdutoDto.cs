@@ -3,7 +3,7 @@
     public class LerLogProdutoDto
     {
 
-        public int? logId { get; set; }
+        public int logId { get; set; }
         public int? produtoId { get; set; }
 
         public string nomeAnterior { get; set; } = null!;

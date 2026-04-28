@@ -44,15 +44,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // chamar nossa conexão com o banco aqui na program
-builder.Services.AddDbContext<Vh_BurguerProfContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Usuário
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 
 // Usuário
-builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
-builder.Services.AddScoped<ProdutoService>();
+//builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+//builder.Services.AddScoped<ProdutoService>();
 
 //JWT
 builder.Services.AddScoped<GeradorTokenJWT>();
@@ -126,6 +126,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+}
+);
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -138,6 +148,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("CorsPolicy");
 
 app.MapControllers();
 

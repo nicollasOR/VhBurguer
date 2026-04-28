@@ -7,9 +7,9 @@ namespace VHBurguer.Repositories
 {
     public class ProdutoRepository : IProdutoRepository
     {
-        private readonly Vh_BurguerProfContext _context;
+        private readonly VH_BurguerContext _context;
 
-        public ProdutoRepository(Vh_BurguerProfContext context)
+        public ProdutoRepository(VH_BurguerContext context)
         {
             _context = context;
         }
@@ -32,10 +32,10 @@ namespace VHBurguer.Repositories
            .Include(produtoDatabase => produtoDatabase.Categoria)
            .Include(produtoDatabase => produtoDatabase.Usuario)
            //
-           .FirstOrDefault(produtoDatabase => produtoDatabase.ProdutoID == id);
+           .FirstOrDefault(produtoDatabase => produtoDatabase.ProdutoId == id);
 
 
-           return produto;
+            return produto;
         }
 
         public bool NomeExiste(string nome, int? produtoIdAtual = null)
@@ -46,13 +46,13 @@ namespace VHBurguer.Repositories
 
             if (produtoIdAtual.HasValue)
                 produtoConsultado
-                         = produtoConsultado.Where(produto => produto.ProdutoID != produtoIdAtual.Value);
+                         = produtoConsultado.Where(produto => produto.ProdutoId != produtoIdAtual.Value);
             return produtoConsultado.Any(produto => produto.Nome == nome);
         }
 
         public byte[] ObterImagem(int id)
         {
-            var produto = _context.Produto.Where(produto => produto.ProdutoID == id)
+            var produto = _context.Produto.Where(produto => produto.ProdutoId == id)
                                               .Select(produto => produto.Imagem)
                                               .FirstOrDefault();
             return produto;
@@ -62,7 +62,7 @@ namespace VHBurguer.Repositories
         {
 
             List<Categoria> categorias = _context.Categoria
-                                         .Where(categorias => categoriaId.Contains(categorias.CategoriaID))
+                                         .Where(categorias => categoriaId.Contains(categorias.CategoriaId))
                                          .ToList();
             produto.Categoria = categorias;
             _context.Produto.Add(produto);
@@ -74,7 +74,7 @@ namespace VHBurguer.Repositories
         {
             Produto produtoBanco = _context.Produto
                 .Include(produto => produto.Categoria)
-                .FirstOrDefault(produtoAuxiliar => produtoAuxiliar.ProdutoID == produto.ProdutoID);
+                .FirstOrDefault(produtoAuxiliar => produtoAuxiliar.ProdutoId == produto.ProdutoId);
 
             if (produtoBanco == null)
                 return;
@@ -90,7 +90,7 @@ namespace VHBurguer.Repositories
                 produtoBanco.StatusProduto = produto.StatusProduto;
 
             var categorias = _context.Categoria.
-                                               Where(categoria => categoriaIds.Contains(categoria.CategoriaID))
+                                               Where(categoria => categoriaIds.Contains(categoria.CategoriaId))
                                               .ToList(); // busca todas as categorias do banco
                                                          // com o id igual as das categorias que vieram da requisicao do front
             produtoBanco.Categoria.Clear(); // remove as ligacoes da categoria com o banco e a categoria
@@ -102,16 +102,16 @@ namespace VHBurguer.Repositories
             _context.SaveChanges();
         }
 
-            public void Remover(int id)
-            {
-            Produto? produto = _context.Produto.FirstOrDefault(produto => produto.ProdutoID == id);
+        public void Remover(int id)
+        {
+            Produto? produto = _context.Produto.FirstOrDefault(produto => produto.ProdutoId == id);
 
             if (produto == null)
                 return;
 
             _context.Produto.Remove(produto);
             _context.SaveChanges();
-            }
+        }
 
 
     }

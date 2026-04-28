@@ -1,7 +1,7 @@
 CREATE DATABASE VH_Burguer
 GO
 
---USE VH_Burguer
+USE VH_Burguer
 
 GO
 
@@ -23,7 +23,9 @@ Nome VARCHAR(100) UNIQUE,
 Descricao VARCHAR(MAX) NOT NULL,
 Imagem VARBINARY(MAX) NOT NULL,
 Preco DECIMAL (10,2) NOT NULL,
-StatusProduto BIT DEFAULT 1
+StatusProduto BIT DEFAULT 1,
+UsuarioId INT NOT NULL,
+CONSTRAINT ProdutoUsuario_Usuario FOREIGN KEY (UsuarioId) REFERENCES Usuario(UsuarioId) --ON DELETE CASCADE 
 
 /*
 Jeito da Professora com foreign key
@@ -63,6 +65,8 @@ CREATE TABLE Log_AlteracaoProduto
  NomeAnterior VARCHAR(100),
  ProdutoId INT FOREIGN KEY REFERENCES Produto(ProdutoId)
 );
+
+
 
 --criando nossas triggers
 	--DELETE -> EXCLUIR O USUARIO == inativar o usuario => StatusUsuario = 0
@@ -127,3 +131,136 @@ GO
 			SELECT GETDATE(), ProdutoId, Nome, Preco FROM deleted
 			END;
 			GO
+
+
+
+
+
+
+			USE VH_Burguer
+GO
+
+-- =========================
+-- USUARIOS
+-- =========================
+INSERT INTO Usuario (Nome, Email, Senha)
+VALUES ('João Silva', 'joao2@email.com', HASHBYTES('SHA2_256', '123456'));
+GO
+
+SELECT * FROM Usuario
+
+INSERT INTO Usuario (Nome, Email, Senha)
+VALUES ('Maria Souza', 'maria@email.com', HASHBYTES('SHA2_256', '123456'));
+GO
+
+INSERT INTO Usuario (Nome, Email, Senha)
+VALUES ('Carlos Lima', 'carlos@email.com', HASHBYTES('SHA2_256', '123456'));
+GO
+
+
+-- =========================
+-- CATEGORIAS
+-- =========================
+INSERT INTO Categoria (Nome)
+VALUES ('Hambúrguer');
+GO
+
+INSERT INTO Categoria (Nome)
+VALUES ('Bebidas');
+GO
+
+INSERT INTO Categoria (Nome)
+VALUES ('Sobremesas');
+GO
+
+INSERT INTO Categoria (Nome)
+VALUES ('Porções');
+GO
+
+
+-- =========================
+-- PROMOCOES
+-- =========================
+INSERT INTO Promocao (Nome, DataExpiracao)
+VALUES ('Promo Combo', '2026-12-31');
+GO
+
+INSERT INTO Promocao (Nome, DataExpiracao)
+VALUES ('Black Friday', '2026-11-29');
+GO
+
+INSERT INTO Promocao (Nome, DataExpiracao)
+VALUES ('Happy Hour', '2026-10-01');
+GO
+
+
+-- =========================
+-- PRODUTOS
+-- =========================
+INSERT INTO Produto (Nome, Descricao, Imagem, Preco, UsuarioId)
+VALUES ('X-Burguer', 'Hambúrguer com queijo', 0x, 25.90, 1);
+GO
+
+INSERT INTO Produto (Nome, Descricao, Imagem, Preco, UsuarioId)
+VALUES ('X-Bacon', 'Hambúrguer com bacon', 0x, 29.90, 1);
+GO
+
+INSERT INTO Produto (Nome, Descricao, Imagem, Preco, UsuarioId)
+VALUES ('Coca-Cola', 'Refrigerante lata', 0x, 6.50, 2);
+GO
+
+INSERT INTO Produto (Nome, Descricao, Imagem, Preco, UsuarioId)
+VALUES ('Batata Frita', 'Porção média', 0x, 15.00, 3);
+GO
+
+INSERT INTO Produto (Nome, Descricao, Imagem, Preco, UsuarioId)
+VALUES ('Milkshake', 'Chocolate 300ml', 0x, 18.00, 2);
+GO
+
+
+-- =========================
+-- PRODUTO CATEGORIA (N:N)
+-- =========================
+INSERT INTO ProdutoCategoria (ProdutoId, CategoriaId)
+VALUES (1, 1);
+GO
+
+INSERT INTO ProdutoCategoria (ProdutoId, CategoriaId)
+VALUES (2, 1);
+GO
+
+INSERT INTO ProdutoCategoria (ProdutoId, CategoriaId)
+VALUES (3, 2);
+GO
+
+INSERT INTO ProdutoCategoria (ProdutoId, CategoriaId)
+VALUES (4, 4);
+GO
+
+INSERT INTO ProdutoCategoria (ProdutoId, CategoriaId)
+VALUES (5, 3);
+GO
+
+
+-- =========================
+-- PRODUTO PROMOCAO (N:N)
+-- =========================
+INSERT INTO ProdutoPromocao (ProdutoId, PromocaoId)
+VALUES (1, 1);
+GO
+
+INSERT INTO ProdutoPromocao (ProdutoId, PromocaoId)
+VALUES (2, 1);
+GO
+
+INSERT INTO ProdutoPromocao (ProdutoId, PromocaoId)
+VALUES (3, 3);
+GO
+
+INSERT INTO ProdutoPromocao (ProdutoId, PromocaoId)
+VALUES (4, 3);
+GO
+
+INSERT INTO ProdutoPromocao (ProdutoId, PromocaoId)
+VALUES (5, 2);
+GO

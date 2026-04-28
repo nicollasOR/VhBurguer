@@ -21,7 +21,7 @@ namespace VHBurguer.Applications.Services
             // converte cada categoria para LerCategoriaDto
             List<LerCategoriaDto> categoriaDto = categorias.Select(categoria => new LerCategoriaDto
             {
-                CategoriaId = categoria.CategoriaID,
+                CategoriaId = categoria.CategoriaId,
                 Nome = categoria.Nome
             }).ToList();
 
@@ -40,7 +40,7 @@ namespace VHBurguer.Applications.Services
 
             LerCategoriaDto categoriaDto = new LerCategoriaDto
             {
-                CategoriaId = categoria.CategoriaID,
+                CategoriaId = categoria.CategoriaId,
                 Nome = categoria.Nome
             };
 

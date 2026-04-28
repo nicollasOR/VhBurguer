@@ -6,9 +6,9 @@ namespace VHBurguer.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        private readonly Vh_BurguerProfContext _context;
+        private readonly VH_BurguerContext _context;
 
-        public UsuarioRepository(Vh_BurguerProfContext context)
+        public UsuarioRepository(VH_BurguerContext context)
         {
             _context = context;
         }
@@ -46,7 +46,7 @@ namespace VHBurguer.Repositories
         public void Atualizar(Usuario usuario)
         {
             Usuario? usuarioBanco = 
-                _context.Usuario.FirstOrDefault(usuarioAux => usuarioAux.UsuarioID == usuario.UsuarioID);
+                _context.Usuario.FirstOrDefault(usuarioAux => usuarioAux.UsuarioId == usuario.UsuarioId);
 
             if(usuarioBanco == null)
             {
@@ -63,7 +63,7 @@ namespace VHBurguer.Repositories
         public void Remover(int id)
         {
             Usuario? usuario =
-                _context.Usuario.FirstOrDefault(usuarioAux => usuarioAux.UsuarioID == id);
+                _context.Usuario.FirstOrDefault(usuarioAux => usuarioAux.UsuarioId == id);
 
             if(usuario == null)
             {

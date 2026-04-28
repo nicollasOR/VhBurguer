@@ -59,12 +59,12 @@ namespace VHBurguer.Controllers
                 return Ok(produto);
             }
 
-            catch(DomainException ex)
+            catch (DomainException ex)
             {
                 return NotFound(ex.Message);
             }
         }
-        
+
 
         [HttpGet("{id}/imagem")]
         public ActionResult ObterImagem(int id)
@@ -76,8 +76,8 @@ namespace VHBurguer.Controllers
                 // retorna o arquivo para o navegador
                 //"imagem/jpeg" informa o tipo da imagem (MIME type)
                 //O navegador entende que deve renderizar como Imagem
-                
-                
+
+
                 return File(imagem, "image/jpeg");
             }
 
@@ -116,14 +116,14 @@ namespace VHBurguer.Controllers
 
         public ActionResult Atualizar(int id, [FromForm] AtualizarProdutoDto produtoDto)
         {
-            
+
             try
             {
                 _service.Atualizar(id, produtoDto);
                 return NoContent();
             }
 
-            catch(DomainException ex)
+            catch (DomainException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -143,12 +143,12 @@ namespace VHBurguer.Controllers
                 return StatusCode(204, id);
             }
 
-            catch(DomainException ex)
+            catch (DomainException ex)
             {
                 return StatusCode(400, id);
             }
 
-            
+
 
         }
 

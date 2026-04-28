@@ -19,8 +19,8 @@ namespace VHBurguer.Applications.Services
 
             List<LerLogProdutoDto> listaLogProduto = log.Select(logg => new LerLogProdutoDto
             {
-                produtoId = logg.ProdutoID,
-                logId = logg.Log_AlteracaoProdutoID,
+                logId = logg.Log_AlteracaoId,
+                produtoId = logg.ProdutoId,
                 DataAlteracao = logg.DataAlteracao,
                 nomeAnterior = logg.NomeAnterior,
                 precoAnterior = logg.PrecoAnterior
@@ -34,8 +34,8 @@ namespace VHBurguer.Applications.Services
             List<Log_AlteracaoProduto> logs = _repository.listarPorProduto(produtoId);
             List<LerLogProdutoDto> listarLogProdutoDto = logs.Select(log_ => new LerLogProdutoDto
             {
-                logId = log_.Log_AlteracaoProdutoID,
-                produtoId = log_.ProdutoID,
+                logId = log_.Log_AlteracaoId,
+                produtoId = log_.ProdutoId,
                 nomeAnterior = log_.NomeAnterior,
                 DataAlteracao = log_.DataAlteracao,
                 precoAnterior = log_.PrecoAnterior

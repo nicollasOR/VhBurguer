@@ -13,7 +13,7 @@ namespace VHBurguer.Applications.Services
 
         private readonly IProdutoRepository _repository;
 
-        public ProdutoService (IProdutoRepository repository)
+        public ProdutoService(IProdutoRepository repository)
         {
             _repository = repository;
         }
@@ -91,7 +91,7 @@ namespace VHBurguer.Applications.Services
                 Descricao = produtoDto.Descricao,
                 Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
                 StatusProduto = true,
-                UsuarioID = usuarioId
+                UsuarioId = usuarioId
             };
 
             _repository.Adicionar(produto, produtoDto.CategoriasIds);

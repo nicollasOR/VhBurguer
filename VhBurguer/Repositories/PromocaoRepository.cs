@@ -8,9 +8,9 @@ namespace VHBurguer.Repositories
     public class PromocaoRepository : IPromocaoRepository
     {
 
-        private readonly Vh_BurguerProfContext _context;
+        private readonly VH_BurguerContext _context;
 
-        public PromocaoRepository(Vh_BurguerProfContext context)
+        public PromocaoRepository(VH_BurguerContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace VHBurguer.Repositories
 
         public Promocao ObterPorId(int id)
         {
-            Promocao? promocao = _context.Promocao.FirstOrDefault(promocaoQuery => promocaoQuery.PromocaoID == id);
+            Promocao? promocao = _context.Promocao.FirstOrDefault(promocaoQuery => promocaoQuery.PromocaoId == id);
             
             return promocao;
         }
@@ -33,7 +33,7 @@ namespace VHBurguer.Repositories
 
             if(promocaoIdAtual.HasValue)
             {
-                consulta = consulta.Where(promocaoQuery => promocaoQuery.PromocaoID != promocaoIdAtual.Value);
+                consulta = consulta.Where(promocaoQuery => promocaoQuery.PromocaoId != promocaoIdAtual.Value);
             }
 
             return consulta.Any(p => p.Nome == nome);
@@ -49,7 +49,7 @@ namespace VHBurguer.Repositories
 
         public void Atualizar(Promocao promocao)
         {
-            Promocao? promocaoBanco = _context.Promocao.FirstOrDefault(p => p.PromocaoID == p.PromocaoID);
+            Promocao? promocaoBanco = _context.Promocao.FirstOrDefault(p => p.PromocaoId == p.PromocaoId);
             if(promocao == null)
             {
                 return;
@@ -62,7 +62,7 @@ namespace VHBurguer.Repositories
 
         public void Remover(int id)
         {
-            Promocao? promocao = _context.Promocao.FirstOrDefault(p => p.PromocaoID == id);
+            Promocao? promocao = _context.Promocao.FirstOrDefault(p => p.PromocaoId == id);
 
             if (promocao == null)
                 return;

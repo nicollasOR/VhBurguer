@@ -26,7 +26,7 @@ namespace VHBurguer.Applications.Services
         {
             LerUsuarioDto lerUsuario = new LerUsuarioDto
             {
-                UsuarioID = usuario.UsuarioID,
+                UsuarioID = usuario.UsuarioId,
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 StatusUsuario = usuario.StatusUsuario ?? true // se não tiver status no banco, deixa como true
@@ -38,7 +38,7 @@ namespace VHBurguer.Applications.Services
         public void conferirStatusUsuario(int id)
         {
             Usuario? usuario = _repository.ObterPorId(id);
-            if (usuario.UsuarioID == 0 || usuario.UsuarioID == null)
+            if (usuario.UsuarioId == 0 || usuario.UsuarioId == null)
                 return;
         } 
         
@@ -146,7 +146,7 @@ namespace VHBurguer.Applications.Services
 
             Usuario usuarioComMesmoEmail = _repository.ObterPorEmail(usuarioDto.Email);
 
-            if (usuarioComMesmoEmail != null && usuarioComMesmoEmail.UsuarioID != id)
+            if (usuarioComMesmoEmail != null && usuarioComMesmoEmail.UsuarioId != id)
             {
                 throw new DomainException("Já existe um usuario com este email"); 
             }

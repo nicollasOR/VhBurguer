@@ -24,18 +24,16 @@ namespace VHBurguer.Controllers
         {
 
             //busca no token/claims o valor armazenado como id do usuario
-            string? idTexto = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //ClaimTypes.NameIdentifier geralmente guarda o ID do usuário no JWT
+            string? idTexto = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(idTexto))
-            {
                 throw new DomainException("Usuário não encotnrado");
-            }
 
             // string - > int
             // nosso usuarioId no sistema está como int
-            return int.Parse(idTexto);
             //as claims que são os usuários dentro do token sempre serão armazenadas como texto
+            return int.Parse(idTexto);
         }
 
 
@@ -92,8 +90,8 @@ namespace VHBurguer.Controllers
         [HttpPost]
         //Indica que recebe dados no formato "multipart/form-data"
         // é necessário quando enviamos arquivos (ex. Img do produto)
-        [Consumes("multipart/form-data")]
-        [Authorize] // usado para que exija uma autenticacao para realizar tal metodo
+        [Consumes("multipart/form-data")] //multipart/form-data
+        //[Authorize] // usado para que exija uma autenticacao para realizar tal metodo
         public ActionResult Adicionar([FromForm] CriarProdutoDto produtoDto) // [ FromForm ] diz que os dados vem do formulário da requisição
         {
             try

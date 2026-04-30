@@ -19,8 +19,8 @@ namespace VHBurguer.Applications.Conversoes
 
                 Categorias = produto.Categoria.Select(categorias => categorias.Nome).ToList(),
                 UsuarioID = produto.UsuarioId,
-                UsuarioNome = produto.Usuario.Nome,
-                UsuarioEmail = produto.Usuario.Email
+                UsuarioNome = produto.Usuario?.Nome,
+                UsuarioEmail = produto.Usuario?.Email
             };
         }
 

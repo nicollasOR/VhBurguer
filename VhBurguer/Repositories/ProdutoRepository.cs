@@ -93,7 +93,7 @@ namespace VHBurguer.Repositories
                                                Where(categoria => categoriaIds.Contains(categoria.CategoriaId))
                                               .ToList(); // busca todas as categorias do banco
                                                          // com o id igual as das categorias que vieram da requisicao do front
-            produtoBanco.Categoria.Clear(); // remove as ligacoes da categoria com o banco e a categoria
+            produtoBanco.Categoria.Clear();             // remove as ligacoes da categoria com o banco e a categoria
             foreach (var categoria in categorias)
             {
                 produtoBanco.Categoria.Add(categoria);

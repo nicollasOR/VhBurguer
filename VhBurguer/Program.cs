@@ -51,8 +51,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 
 // Usuário
-//builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
-//builder.Services.AddScoped<ProdutoService>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<ProdutoService>();
 
 //JWT
 builder.Services.AddScoped<GeradorTokenJWT>();

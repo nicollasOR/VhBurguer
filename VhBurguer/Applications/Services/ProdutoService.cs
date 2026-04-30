@@ -38,29 +38,18 @@ namespace VHBurguer.Applications.Services
         private static void ValidarCadastro(CriarProdutoDto produtoDto)
         {
             if (string.IsNullOrWhiteSpace(produtoDto.Nome))
-            {
                 throw new DomainException("Nome é obrigatório.");
-            }
 
             if (produtoDto.Preco < 0)
-            {
                 throw new DomainException("Preço deve ser maior que zero.");
-            }
-
             if (string.IsNullOrWhiteSpace(produtoDto.Descricao))
-            {
                 throw new DomainException("Descrição é obrigatória.");
-            }
 
             if (produtoDto.Imagem == null || produtoDto.Imagem.Length == 0)
-            {
                 throw new DomainException("Imagem é obrigatória.");
-            }
 
             if (produtoDto.CategoriasIds == null || produtoDto.CategoriasIds.Count == 0)
-            {
                 throw new DomainException("Produto deve ter ao menos uma categoria.");
-            }
         }
 
         public byte[] ObterImagem(int id)
@@ -68,9 +57,9 @@ namespace VHBurguer.Applications.Services
             byte[] imagem = _repository.ObterImagem(id);
 
             if (imagem == null || imagem.Length == 0)
-            {
                 throw new DomainException("Imagem não encontrada");
-            }
+
+
 
             return imagem;
         }

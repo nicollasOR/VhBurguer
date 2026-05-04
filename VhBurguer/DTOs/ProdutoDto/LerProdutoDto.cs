@@ -18,6 +18,8 @@
         public List<int> CategoriaIds { get; set; } = new();
         public List<string> Categorias { get; set; } = new();
 
+        public string imagemURL { get; set; } 
+
 
         public int? UsuarioID { get; set; }
         public string? UsuarioNome { get; set; }

@@ -1,4 +1,5 @@
-﻿using VHBurguer.Applications.Conversoes;
+﻿using VHBurguer.Applications.ContentSafety;
+using VHBurguer.Applications.Conversoes;
 using VHBurguer.Applications.Regras;
 using VHBurguer.Domains;
 using VHBurguer.DTOs;
@@ -11,11 +12,29 @@ namespace VHBurguer.Applications.Services
     public class ProdutoService
     {
 
+        private readonly IContentSafetyRepository _contentSafety;
         private readonly IProdutoRepository _repository;
 
-        public ProdutoService(IProdutoRepository repository)
+        public ProdutoService(IProdutoRepository repository, IContentSafetyRepository contentSafety)
         {
             _repository = repository;
+            _contentSafety = contentSafety;
+
+        }
+
+
+        private async Task ValidarConteudoProdutoAsync(string nome, string descricao)
+        {
+            string textoParaValidar = $@"
+                Nome do produto: {nome}
+                Descrição do produto: {descricao}";
+
+            var resultado = await _contentSafety.ValidarConteudoProdutoAsync(textoParaValidar);
+
+            if (!resultado.aprovado)
+            {
+                throw new DomainException(resultado.msg);
+            }
         }
 
         public List<LerProdutoDto> Listar()
@@ -36,7 +55,8 @@ namespace VHBurguer.Applications.Services
         }
 
         private static void ValidarCadastro(CriarProdutoDto produtoDto)
-        {
+        { 
+            //ValidarConteudoProdutoAsync(string nome, string descricao);
             if (string.IsNullOrWhiteSpace(produtoDto.Nome))
                 throw new DomainException("Nome é obrigatório.");
 
@@ -64,10 +84,10 @@ namespace VHBurguer.Applications.Services
             return imagem;
         }
 
-        public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        public async Task<LerProdutoDto> Adicionar(CriarProdutoDto produtoDto, int usuarioId)
         {
             ValidarCadastro(produtoDto);
-
+            await ValidarConteudoProdutoAsync(produtoDto.Nome, produtoDto.Descricao);
             if (_repository.NomeExiste(produtoDto.Nome))
             {
                 throw new DomainException("Produto já existente");
@@ -105,7 +125,7 @@ namespace VHBurguer.Applications.Services
                 throw new DomainException("Já existe outro produto com esse nome.");
             }
 
-            if (produtoDto.CategoriaIds == null || produtoDto.CategoriaIds.Count == 0)
+            if (produtoDto.CategoriasIds == null || produtoDto.CategoriasIds.Count == 0)
             {
                 throw new DomainException("Produto deve ter ao menos uma categoria.");
             }
@@ -129,7 +149,7 @@ namespace VHBurguer.Applications.Services
                 produtoBanco.StatusProduto = produtoDto.StatusProduto.Value;
             }
 
-            _repository.Atualizar(produtoBanco, produtoDto.CategoriaIds);
+            _repository.Atualizar(produtoBanco, produtoDto.CategoriasIds);
 
             return ProdutoParaDTO.converterParaDTO(produtoBanco);
 

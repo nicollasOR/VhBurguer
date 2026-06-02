@@ -1,15 +1,21 @@
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using VHBurguer.Applications.Autenticacao;
+using VHBurguer.Applications.ContentSafety;
 using VHBurguer.Applications.Services;
 using VHBurguer.Contexts;
 using VHBurguer.Interfaces;
 using VHBurguer.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+Env.Load();
+
+string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 
@@ -50,11 +56,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // chamar nossa conexão com o banco aqui na program
-builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+//builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // Usuário
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
+
+//builder.Services.AddScoped<IContentSafetyRepository, ContentSafetyService>();
+builder.Services.AddScoped<IContentSafetyRepository>();
+builder.Services.AddScoped<ContentSafetyService>();
 
 // Usuário
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();

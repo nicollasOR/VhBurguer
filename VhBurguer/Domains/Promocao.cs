@@ -9,9 +9,9 @@ public partial class Promocao
 
     public string Nome { get; set; } = null!;
 
-    public DateTime DataExpiracao { get; set; }
+    public DateTime DataExpiração { get; set; }
 
-    public bool? StatusPromocao { get; set; }
+    public bool StatusPromocao { get; set; }
 
-    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
+    public virtual ICollection<JogoPromocao> JogoPromocao { get; set; } = new List<JogoPromocao>();
 }

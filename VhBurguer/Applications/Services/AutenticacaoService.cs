@@ -43,10 +43,10 @@ namespace VHBurguer.Applications.Services
 
             if (!verificarSenha(_loginDto.Senha, usuario.Senha))
                 throw new DomainException("Email ou senha inválidos.");
-
             //gerando o token
 
             var token = _tokenJWT.gerarToken(usuario);
+           
 
             TokenDto novoToken = new TokenDto { Token  = token };
 

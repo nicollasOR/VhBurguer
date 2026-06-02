@@ -23,7 +23,11 @@ namespace VHBurguer.Applications.Autenticacao
         public string gerarToken(Usuario usuario)
         {
             // KEY -> chave secreta
-            var chave = _config["JWT:Key"];
+            //var chave = _config["JWT:Key"];
+            var chave = Environment.GetEnvironmentVariable("JWT_KEY");
+            if (string.IsNullOrEmpty(chave))
+                throw new DomainException("Não configurada na ENV em");
+
             // usada para assinar o token JWT
 
             // issuer -> quem gerou o token (nome da API / sistema que gerou)

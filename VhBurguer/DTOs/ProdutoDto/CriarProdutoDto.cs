@@ -11,7 +11,7 @@
 
         public List<int> CategoriasIds { get; set; } = new();
 
-
+        public bool? gerarDescricao { get; set; } = false;
 
     }
 }

@@ -62,8 +62,11 @@ namespace VHBurguer.Applications.Services
 
             if (produtoDto.Preco < 0)
                 throw new DomainException("Preço deve ser maior que zero.");
-            if (string.IsNullOrWhiteSpace(produtoDto.Descricao))
-                throw new DomainException("Descrição é obrigatória.");
+            //if (string.IsNullOrWhiteSpace(produtoDto.Descricao))
+            //throw new DomainException("Descrição é obrigatória.");
+
+            if (string.IsNullOrWhiteSpace(produtoDto.Descricao) && produtoDto.gerarDescricao != true)
+                throw new DomainException("Descrição é obrigatória ou ative 'GerarDescricaoComIA'.");
 
             if (produtoDto.Imagem == null || produtoDto.Imagem.Length == 0)
                 throw new DomainException("Imagem é obrigatória.");
@@ -84,8 +87,29 @@ namespace VHBurguer.Applications.Services
             return imagem;
         }
 
+        
         public async Task<LerProdutoDto> Adicionar(CriarProdutoDto produtoDto, int usuarioId)
         {
+            string descricao_Produto_Final = produtoDto.Descricao;
+            if (string.IsNullOrEmpty(descricao_Produto_Final))
+            {
+                byte[] imgByte = ImagemParaBytes.ConverterImagem(produtoDto.Imagem);
+                descricao_Produto_Final = await _contentSafety.gerarDescricao(imgByte, produtoDto.Imagem.FileName);
+            }
+
+            if (string.IsNullOrWhiteSpace(descricao_Produto_Final) && produtoDto.gerarDescricao == true)
+            {
+                try
+                {
+                    descricao_Produto_Final = await _contentSafety.gerarDescricao(produtoDto.Imagem);
+                }
+                catch (Exception ex)
+                {
+                    throw new DomainException($"Erro ao gerar descrição com IA: {ex.Message}");
+                }
+            }
+
+
             ValidarCadastro(produtoDto);
             await ValidarConteudoProdutoAsync(produtoDto.Nome, produtoDto.Descricao);
             if (_repository.NomeExiste(produtoDto.Nome))

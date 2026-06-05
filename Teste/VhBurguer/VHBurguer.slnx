@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../VhBurguer.Tests/VhBurguer.Tests.csproj" Id="2f571ba1-aa5c-482d-9ff8-7b88c9b39c55" />
+  <Project Path="VHBurguer.csproj" />
+</Solution>

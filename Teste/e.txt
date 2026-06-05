@@ -1,0 +1,19 @@
+Jogar a pasta do projeto dentro de outra
+abrir visual studio
+clicar na solução do projeto
+adicionar novo projeto 
+(NOME).Tests
+adicionar referencias de projeto ao projeto anterior
+Baixar as extensões abaixo:
+FluentASsertions
+MOQ
+Microsoft.NET.Test.Sdk
+// xunit
+xunit.runner.visualstudio
+xunit.v3
+
+agora, depois de baixar tudo no tests, adicione uma nova pasta dentro dele e coloque services
+e crie a servisse
+
+$ npm i cypress --save-dev
+$ npx cypress open

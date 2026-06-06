@@ -4,14 +4,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using VHBurguer.Applications.Autenticacao;
+using VHBurguer.Applications.ContentSafety;
 using VHBurguer.Applications.Services;
 using VHBurguer.Contexts;
 using VHBurguer.Interfaces;
 using VHBurguer.Repositories;
 
+DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
+//GEMINI_API_KEY = AQ.Ab8RN6JFQnaUZ7hDcnVvdMoXH4pXCXImWBuYY1jvvAtJkL4ezQ
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -51,7 +53,10 @@ builder.Services.AddSwaggerGen(c =>
 
 // chamar nossa conexão com o banco aqui na program
 builder.Services.AddDbContext<VH_BurguerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
+/*
+   "nome": "123",
+  "email": "123@gmail.com"
+ */
 // Usuário
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
@@ -75,7 +80,11 @@ builder.Services.AddScoped<PromocaoService>();
 //Log alteracao
 builder.Services.AddScoped<ILogAlteracaoProdutoRepository, LogAlteracaoRepository>();
 builder.Services.AddScoped<Log_AlteracaoProdutoService>();
-
+// Registra o seu novo serviço do Gemini no container de Injeção de Dependência
+//builder.Services.AddScoped<IContentSafetyRepository>();
+//builder.Services.AddScoped<ContentSafetyService>();
+// Registra o seu novo serviço do Gemini no container de Injeção de Dependência
+builder.Services.AddScoped<IContentSafetyRepository, ContentSafetyService>();
 
 // Configura o sistema de autenticação da aplicação.
 // Aqui estamos dizendo que o tipo de autenticação padrão será JWT Bearer.

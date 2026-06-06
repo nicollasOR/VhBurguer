@@ -11,7 +11,7 @@ public partial class Promocao
 
     public DateTime DataExpiracao { get; set; }
 
-    public bool? StatusPromocao { get; set; }
+    public bool StatusPromocao { get; set; }
 
-    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
+    public virtual ICollection<ProdutoPromocao> ProdutoPromocao { get; set; } = new List<ProdutoPromocao>();
 }

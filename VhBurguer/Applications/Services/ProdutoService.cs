@@ -1,4 +1,5 @@
-﻿using VHBurguer.Applications.Conversoes;
+﻿using VHBurguer.Applications.ContentSafety;
+using VHBurguer.Applications.Conversoes;
 using VHBurguer.Applications.Regras;
 using VHBurguer.Domains;
 using VHBurguer.DTOs;
@@ -12,16 +13,18 @@ namespace VHBurguer.Applications.Services
     {
 
         private readonly IProdutoRepository _repository;
+        private readonly IContentSafetyRepository _content;
 
-        public ProdutoService(IProdutoRepository repository)
+        public ProdutoService(IProdutoRepository repository, IContentSafetyRepository content)
         {
             _repository = repository;
+            _content = content;
         }
 
         public List<LerProdutoDto> Listar()
         {
             List<Produto> produtos = _repository.Listar();
-            // SELECT perocrre cada produto e transforma EM DTO -> LerProdutoDto
+            // SELECT percorre cada produto e transforma EM DTO -> LerProdutoDto
             List<LerProdutoDto> produtosDto = produtos.Select(ProdutoParaDTO.converterParaDTO).ToList();
             return produtosDto;
         }
@@ -42,8 +45,8 @@ namespace VHBurguer.Applications.Services
 
             if (produtoDto.Preco < 0)
                 throw new DomainException("Preço deve ser maior que zero.");
-            if (string.IsNullOrWhiteSpace(produtoDto.Descricao))
-                throw new DomainException("Descrição é obrigatória.");
+            //if (string.IsNullOrWhiteSpace(produtoDto.Descricao))
+                //throw new DomainException("Descrição é obrigatória."); comentar para a geração de descrição funcionar
 
             if (produtoDto.Imagem == null || produtoDto.Imagem.Length == 0)
                 throw new DomainException("Imagem é obrigatória.");
@@ -64,7 +67,7 @@ namespace VHBurguer.Applications.Services
             return imagem;
         }
 
-        public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        /*public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
         {
             ValidarCadastro(produtoDto);
 
@@ -87,6 +90,104 @@ namespace VHBurguer.Applications.Services
 
             return ProdutoParaDTO.converterParaDTO(produto);
         }
+        
+         
+         */
+
+
+
+
+
+
+
+        /*   public async Task<LerProdutoDto> AdicionarAsync(CriarProdutoDto produtoDto, int usuarioId)
+           {
+               ValidarCadastro(produtoDto);
+
+               if (_repository.NomeExiste(produtoDto.Nome))
+               {
+                   throw new DomainException("Produto já existente");
+               }
+
+               // ⚡ REGRA DA IA: Se a descrição veio vazia ou nula pelo Swagger, o Gemini entra em ação
+               string descricaoFinal = produtoDto.Descricao;
+
+               if (string.IsNullOrWhiteSpace(descricaoFinal))
+               {
+                   // Chama o método que criamos no passo anterior
+                   descricaoFinal = await _content.gerarDescricao(produtoDto.Imagem);
+               }
+
+               Produto produto = new Produto
+               {
+                   Nome = produtoDto.Nome,
+                   Preco = produtoDto.Preco,
+                   Descricao = descricaoFinal, // Salva a descrição (seja a enviada ou a gerada pela IA)
+                   Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
+                   StatusProduto = true,
+                   UsuarioId = usuarioId
+               };
+
+               _repository.Adicionar(produto, produtoDto.CategoriasIds);
+
+               return ProdutoParaDTO.converterParaDTO(produto);
+           }
+
+           */
+
+        public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        {
+            ValidarCadastro(produtoDto);
+
+            if (_repository.NomeExiste(produtoDto.Nome))
+            {
+                throw new DomainException("Produto já existente");
+            }
+
+            string descricaoFinal = produtoDto.Descricao;
+
+            // verificação da descrição para que caso seja vazio
+            if (string.IsNullOrWhiteSpace(descricaoFinal))
+            {
+                try
+                {
+                    // Executa o método do Gemini de forma síncrona sem precisar do async/await no Adicionar (demorei muito pra fazer)
+                    descricaoFinal = _content.gerarDescricao(produtoDto.Imagem)
+                                             .GetAwaiter() // esse devolve um objeto Task<string> que esta no gerarDesc acima
+                                             .GetResult(); // aqui funciona o await e async, ele para o código e executa tudo dentro do método
+                                                           // se der certo, retorna true e a descrição gerada por IA
+                                                           // se não, vai pro catch
+                }
+                catch (DomainException ex)
+                {
+                    // Se o Gemini falhar por algum motivo (espero que nunca)
+                    // o sistema não quebra e assume um texto padrão para continuar o cadastro
+                    descricaoFinal = "Descrição não informada.";
+                    throw new DomainException("Descrição deu erro pae");
+                }
+            }
+
+            Produto produto = new Produto
+            {
+                Nome = produtoDto.Nome,
+                Preco = produtoDto.Preco,
+                Descricao = descricaoFinal, // Salva o texto enviado, o gerado pela IA ou o fallback
+                Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
+                StatusProduto = true,
+                UsuarioId = usuarioId
+            };
+
+            _repository.Adicionar(produto, produtoDto.CategoriasIds);
+
+            return ProdutoParaDTO.converterParaDTO(produto);
+        }
+
+
+
+
+
+
+
 
         public LerProdutoDto Atualizar(int id, AtualizarProdutoDto produtoDto)
         {

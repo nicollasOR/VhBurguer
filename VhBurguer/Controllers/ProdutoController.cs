@@ -107,6 +107,21 @@ namespace VHBurguer.Controllers
             }
 
         }
+        
+
+
+        //[HttpPost]
+        //[Consumes("multipart/form-data")] // 👈 Essencial para o Swagger habilitar o botão de upload de arquivo!
+        //public async Task<IActionResult> Adicionar([FromForm] CriarProdutoDto produtoDto)
+        //{
+        //    // Substitua pela forma correta que você usa para pegar o ID do usuário logado
+        //    int usuarioId = ObterUsuarioIdLogado();
+
+        //    // Chama o novo método assíncrono que criamos com o Gemini
+        //    var resultado = await _service.AdicionarAsync(produtoDto, usuarioId);
+
+        //    return Ok(resultado);
+        //}
 
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]

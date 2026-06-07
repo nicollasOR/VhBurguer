@@ -1,4 +1,5 @@
-﻿using VHBurguer.Applications.ContentSafety;
+﻿using System.Threading.Tasks;
+using VHBurguer.Applications.ContentSafety;
 using VHBurguer.Applications.Conversoes;
 using VHBurguer.Applications.Regras;
 using VHBurguer.Domains;
@@ -38,7 +39,7 @@ namespace VHBurguer.Applications.Services
             return ProdutoParaDTO.converterParaDTO(produto);
         }
 
-        private static void ValidarCadastro(CriarProdutoDto produtoDto)
+        private static async Task ValidarCadastro(CriarProdutoDto produtoDto)
         {
             if (string.IsNullOrWhiteSpace(produtoDto.Nome))
                 throw new DomainException("Nome é obrigatório.");
@@ -53,8 +54,13 @@ namespace VHBurguer.Applications.Services
 
             if (produtoDto.CategoriasIds == null || produtoDto.CategoriasIds.Count == 0)
                 throw new DomainException("Produto deve ter ao menos uma categoria.");
-        }
 
+            
+        }
+        //public Task<LerProdutoDto> Adicionarv2(CriarProdutoDto produtoDto, int usuarioId)
+        //{
+            
+        //}
         public byte[] ObterImagem(int id)
         {
             byte[] imagem = _repository.ObterImagem(id);
@@ -67,75 +73,10 @@ namespace VHBurguer.Applications.Services
             return imagem;
         }
 
-        /*public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
-        {
-            ValidarCadastro(produtoDto);
-
-            if (_repository.NomeExiste(produtoDto.Nome))
-            {
-                throw new DomainException("Produto já existente");
-            }
-
-            Produto produto = new Produto
-            {
-                Nome = produtoDto.Nome,
-                Preco = produtoDto.Preco,
-                Descricao = produtoDto.Descricao,
-                Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
-                StatusProduto = true,
-                UsuarioId = usuarioId
-            };
-
-            _repository.Adicionar(produto, produtoDto.CategoriasIds);
-
-            return ProdutoParaDTO.converterParaDTO(produto);
-        }
-        
-         
-         */
 
 
-
-
-
-
-
-        /*   public async Task<LerProdutoDto> AdicionarAsync(CriarProdutoDto produtoDto, int usuarioId)
-           {
-               ValidarCadastro(produtoDto);
-
-               if (_repository.NomeExiste(produtoDto.Nome))
-               {
-                   throw new DomainException("Produto já existente");
-               }
-
-               // ⚡ REGRA DA IA: Se a descrição veio vazia ou nula pelo Swagger, o Gemini entra em ação
-               string descricaoFinal = produtoDto.Descricao;
-
-               if (string.IsNullOrWhiteSpace(descricaoFinal))
-               {
-                   // Chama o método que criamos no passo anterior
-                   descricaoFinal = await _content.gerarDescricao(produtoDto.Imagem);
-               }
-
-               Produto produto = new Produto
-               {
-                   Nome = produtoDto.Nome,
-                   Preco = produtoDto.Preco,
-                   Descricao = descricaoFinal, // Salva a descrição (seja a enviada ou a gerada pela IA)
-                   Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
-                   StatusProduto = true,
-                   UsuarioId = usuarioId
-               };
-
-               _repository.Adicionar(produto, produtoDto.CategoriasIds);
-
-               return ProdutoParaDTO.converterParaDTO(produto);
-           }
-
-           */
-
-        public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        // fazer este funcionar -> funcionando meu fio
+        public async Task<LerProdutoDto> AdicionarAsync(CriarProdutoDto produtoDto, int usuarioId)
         {
             ValidarCadastro(produtoDto);
 
@@ -145,6 +86,63 @@ namespace VHBurguer.Applications.Services
             }
 
             string descricaoFinal = produtoDto.Descricao;
+
+            // CORREÇÃO: Validando o texto de forma assíncrona antes de avançar
+            if (!string.IsNullOrWhiteSpace(descricaoFinal))
+            {
+                var (aprovado, msg) = await _content.ValidarConteudoProdutoAsync(descricaoFinal);
+                if (!aprovado)
+                {
+                    throw new DomainException($"Conteúdo inadequado detectado: {msg}");
+                }
+            }
+            else // Caso a descrição seja vazia, a IA gera uma baseada na imagem
+            {
+                try
+                {
+                    // trocando o .GetAwaiter().GetResult() pelo await da forma certa 
+                    // A IA que recomendou 👌
+                    descricaoFinal = await _content.gerarDescricao(produtoDto.Imagem);
+                }
+                catch (DomainException ex)
+                {
+                    
+                    descricaoFinal = "Descrição não informada.";
+                    throw new DomainException("Descrição não informada");
+                }
+            }
+
+            Produto produto = new Produto
+            {
+                Nome = produtoDto.Nome,
+                Preco = produtoDto.Preco,
+                Descricao = descricaoFinal,
+                Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
+                StatusProduto = true,
+                UsuarioId = usuarioId
+            };
+
+            _repository.Adicionar(produto, produtoDto.CategoriasIds);
+
+            return ProdutoParaDTO.converterParaDTO(produto);
+        }
+
+
+
+
+        /*
+         Método sem async
+          public LerProdutoDto Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        {
+            //await ValidarCadastro(produtoDto);
+
+            if (_repository.NomeExiste(produtoDto.Nome))
+            {
+                throw new DomainException("Produto já existente");
+            }
+
+            string descricaoFinal = produtoDto.Descricao;
+            _content.ValidarConteudoProdutoAsync(descricaoFinal);
 
             // verificação da descrição para que caso seja vazio
             if (string.IsNullOrWhiteSpace(descricaoFinal))
@@ -183,10 +181,34 @@ namespace VHBurguer.Applications.Services
         }
 
 
+        */
 
 
+        public async Task<LerProdutoDto> Adicionar(CriarProdutoDto produtoDto, int usuarioId)
+        {
+            ValidarCadastro(produtoDto);
 
+            //await ValidarConteudoProdutoAsync(produtoDto.Nome, produtoDto.Descricao);
 
+            if (_repository.NomeExiste(produtoDto.Nome))
+            {
+                throw new DomainException("Produto já existente");
+            }
+
+            Produto produto = new Produto
+            {
+                Nome = produtoDto.Nome,
+                Preco = produtoDto.Preco,
+                Descricao = produtoDto.Descricao,
+                Imagem = ImagemParaBytes.ConverterImagem(produtoDto.Imagem),
+                StatusProduto = true,
+                UsuarioId = usuarioId
+            };
+
+            _repository.Adicionar(produto, produtoDto.CategoriasIds);
+
+            return ProdutoParaDTO.converterParaDTO(produto);
+        }
 
 
         public LerProdutoDto Atualizar(int id, AtualizarProdutoDto produtoDto)

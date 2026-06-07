@@ -13,7 +13,7 @@ using VHBurguer.Repositories;
 DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-//GEMINI_API_KEY = AQ.Ab8RN6JFQnaUZ7hDcnVvdMoXH4pXCXImWBuYY1jvvAtJkL4ezQ
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

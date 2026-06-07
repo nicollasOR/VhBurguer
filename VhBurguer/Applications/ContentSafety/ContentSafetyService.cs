@@ -33,58 +33,48 @@ namespace VHBurguer.Applications.ContentSafety
             };
         }
 
-//        public async Task<(bool aprovado, string msg)> ValidarConteudoProdutoAsync(string texto)
-//        {
-//            //throw new NotImplementedException();
-//            if (string.IsNullOrEmpty(apiKey))
-//                //return (true, );
-//                return (false, "API_key nao configurada");
+        public async Task<(bool aprovado, string msg)> ValidarConteudoProdutoAsync(string texto)
+        {
+            if (string.IsNullOrEmpty(apiKey))
+                return (false, "API_key não configurada");
 
-//            try
-//            {
-//                var client = new Client(apiKey: apiKey); // cliente responsável pela comunicação pela comunicação do gemini
-//                string prompt = $@"
-//                Você é um moderador de conteúdo extremamente rigoroso para uma plataforma pública.
+            try
+            {
+                var client = new Client(apiKey: apiKey);
+                string prompt = $@"
+        Você é um moderador de conteúdo extremamente rigoroso para uma plataforma pública.
 
-//                    Analise o TEXTO abaixo considerando as regras:
+        Analise o TEXTO abaixo considerando as regras:
+        - NÃO é permitido: palavrões, xingamentos, conteúdo ofensivo, duplo sentido ou linguagem inadequada.
+        - Seja extremamente conservador: na dúvida, classifique como INSEGURO.
 
-//                    - NÃO é permitido:
-//                      - palavrões, xingamentos ou linguagem vulgar (ex: ""caralho"", ""porra"", ""merda"", etc.)
-//                      - conteúdo ofensivo, agressivo ou desrespeitoso
-//                      - conteúdo com duplo sentido ou conotação sexual
-//                      - qualquer linguagem inadequada para ambiente profissional ou educacional
-//                      - conteúdo ilegal (drogas, armas, etc.)
+        Responda APENAS com:
+        SEGURO ou INSEGURO: [breve motivo em português]
 
-//                    - Mesmo que esteja em tom informal ou ""brincadeira"", ainda deve ser considerado INSEGURO.
+        TEXTO:{texto}";
 
-//                    - Seja extremamente conservador: na dúvida, classifique como INSEGURO.
+                var response = await client.Models.GenerateContentAsync(
+                    model: "gemini-2.5-flash-lite",
+                    contents: prompt
+                );
 
-//                    Responda APENAS com:
+                string result = response.Text?.Trim() ?? "";
 
-//                    SEGURO ou INSEGURO: [breve motivo em português]
+                // CORREÇÃO 1: Verifica se a IA respondeu que é INSEGURO
+                if (result.StartsWith("INSEGURO", StringComparison.OrdinalIgnoreCase))
+                {
+                    return (false, result);
+                }
 
-//                    TEXTO:{texto}
-//";
-
-//                var response = await client.Models.GenerateContentAsync(
-//                        model: "gemini-2.5-flash-lite",
-//                        contents: prompt
-
-//                       );
-//                string result = response.Text.Trim() ?? "";
-//                //INSEGURO: é um palavrao 
-//                //TEXTO: vai tomar la
-//                if (result.StartsWith(""))
-//                    return (false, result);
-
-//                return (true, "Textos seguros! ;");
-//            }
-
-//            catch (DomainException ex)
-//            {
-//                return (false, "ERRO na IA", ex.Message);
-//            }
-//        }
+                return (true, "Textos seguros! ;)");
+            }
+            // CORREÇÃO 3: Captura qualquer exceção (de rede, da API, etc) para não quebrar o app
+            catch (Exception ex)
+            {
+                // CORREÇÃO 2: Retorna apenas dois valores, concatenando a mensagem de erro
+                return (false, $"Erro na IA: {ex.Message}");
+            }
+        }
 
         public async Task<string> gerarDescricao(IFormFile imagem)
         {

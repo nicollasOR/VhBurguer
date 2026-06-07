@@ -86,42 +86,18 @@ namespace VHBurguer.Controllers
         }
 
 
-
         [HttpPost]
-        //Indica que recebe dados no formato "multipart/form-data"
-        // é necessário quando enviamos arquivos (ex. Img do produto)
-        [Consumes("multipart/form-data")] //multipart/form-data
-        //[Authorize] // usado para que exija uma autenticacao para realizar tal metodo
-        public ActionResult Adicionar([FromForm] CriarProdutoDto produtoDto) // [ FromForm ] diz que os dados vem do formulário da requisição
+        [Consumes("multipart/form-data")] // 👈 Essencial para o Swagger habilitar o botão de upload de arquivo!
+        public async Task<IActionResult> Adicionar([FromForm] CriarProdutoDto produtoDto)
         {
-            try
-            {
-                int usuarioId = ObterUsuarioIdLogado();
-                _service.Adicionar(produtoDto, usuarioId); // cadastro fica associado ao usuario logado
-                return NoContent();
-            }
+            // Substitua pela forma correta que você usa para pegar o ID do usuário logado
+            int usuarioId = ObterUsuarioIdLogado();
 
-            catch (DomainException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            // Chama o novo método assíncrono que criamos com o Gemini
+            var resultado = await _service.AdicionarAsync(produtoDto, usuarioId);
 
+            return Ok(resultado);
         }
-        
-
-
-        //[HttpPost]
-        //[Consumes("multipart/form-data")] // 👈 Essencial para o Swagger habilitar o botão de upload de arquivo!
-        //public async Task<IActionResult> Adicionar([FromForm] CriarProdutoDto produtoDto)
-        //{
-        //    // Substitua pela forma correta que você usa para pegar o ID do usuário logado
-        //    int usuarioId = ObterUsuarioIdLogado();
-
-        //    // Chama o novo método assíncrono que criamos com o Gemini
-        //    var resultado = await _service.AdicionarAsync(produtoDto, usuarioId);
-
-        //    return Ok(resultado);
-        //}
 
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
